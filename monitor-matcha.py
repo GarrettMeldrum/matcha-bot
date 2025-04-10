@@ -8,7 +8,6 @@ from selenium.webdriver.support.ui import Select
 
 
 webpageURL = 'https://j-j-market.com/products/matcha-wako-from-marukyu-koyamaen-100g'
-webpageURL = 'https://j-j-market.com/products/matcha-powder-uji-no-mukashi-from-jj-market-30g?_pos=1&_fid=f1d539866&_ss=c'
 
 
 input_email = 'garrettmeldrum14@gmail.com'
