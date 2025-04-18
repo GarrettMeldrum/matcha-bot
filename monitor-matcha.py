@@ -8,6 +8,7 @@ from selenium.webdriver.support.ui import Select
 
 
 webpageURL = 'https://j-j-market.com/products/matcha-wako-from-marukyu-koyamaen-100g'
+webpageURL = 'https://j-j-market.com/products/matcha-powder-yame-no-mukashi-from-jj-market-30g' # test matcha product page
 
 
 input_email = 'garrettmeldrum14@gmail.com'
@@ -209,6 +210,12 @@ while True:
         shipping_is_billing_checkbox = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "billingAddress")))
         if not shipping_is_billing_checkbox.is_selected():
             shipping_is_billing_checkbox.click()
+
+
+        remember_me_checkbox = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "RememberMe-RememberMeCheckbox")))
+        if remember_me_checkbox.is_selected():
+            remember_me_checkbox.click()
+
 
 
         # click "Pay now" and the order has been placed
