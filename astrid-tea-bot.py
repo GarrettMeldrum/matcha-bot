@@ -16,7 +16,7 @@ from selenium.webdriver.chrome.options import Options
 # real site
 website = 'https://astridtea.com/products/okita-matcha?variant=45366670033119'
 # this is live cart test
-website = 'https://astridtea.com/products/takayama-chasen-matcha-whisk'
+#website = 'https://astridtea.com/products/takayama-chasen-matcha-whisk'
 # search for the .env file in the project dir
 load_dotenv()
 
@@ -36,7 +36,7 @@ try:
 
     service = Service(driver_path)
 
-    driver = webdriver.Chrome(service=service)
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     logger.info("ChromeDriver started successfully.")
 except SessionNotCreatedException as e:
     logger.error(f"Session failed: Chrome/driver version mismatch? {e}")
@@ -234,15 +234,10 @@ while True:
         if card_name != correct_card_name:
             # first try to clear the name before we input the correct name
             try:
-                driver.find_element(By.XPATH, "//button[@aria-label='Clear']").click()
+                card_name_container.clear()
             except Exception as e:
                 print("An error was raised: ", e)
-            # double check the name value has been removed
-            try:
-                driver.execute_script("arguments[0].removeAttribute('value');", card_name_container)
-            except Exception as e:
-                print("An error was raised: ", e)
-            card_name_container.send_keys(correct_card_name)
+            card_name_container.send_keys(correct_card_name)   
         driver.switch_to.default_content()
         print(f"STEP 17 --> Ensured/Inputted card name at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}...")
 
@@ -263,17 +258,18 @@ while True:
         print(f"STEP 19 --> Unclicked the remember me button at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}...")
 
 
-        # STEP 08 --> click pay now
+        # STEP 20 --> click pay now
         btn_pay_now = driver.find_element(By.ID, "checkout-pay-button")
         btn_pay_now_wait = WebDriverWait(driver, 10, poll_frequency=0.5).until(EC.element_to_be_clickable(btn_pay_now))
         btn_pay_now_wait.click()
         print(f"STEP 20 --> Clicked pay now button at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}...")
 
 
-        print("Purchase made... script will shutdown in 60 seconds...")
-        time.sleep(60)
+        print("Purchase made... script will shutdown in 10 seconds...")
+        time.sleep(10)
         driver.quit()
         sys.exit(0)
+
 
     if now - last_log_time >= log_interval:
         print(f"Astrid Tea Bot --> Attribute still disabled at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
