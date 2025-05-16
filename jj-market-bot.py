@@ -1,6 +1,8 @@
 import time, sys, os, logging
 from dotenv import load_dotenv
 
+import platform
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,6 +10,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import SessionNotCreatedException, WebDriverException
 from selenium.webdriver.support.ui import Select
+
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -23,27 +26,37 @@ load_dotenv()
 # Configure and start the logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-try:
-    driver_path = ChromeDriverManager().install()
 
-    chrome_options = Options()
-    chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
 
-    service = Service(driver_path)
+def start_driver():
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    logger.info("ChromeDriver started successfully.")
-except SessionNotCreatedException as e:
-    logger.error(f"Session failed: Chrome/driver version mismatch? {e}")
-    sys.exit(1)
-except WebDriverException as e:
-    logger.error(f"WebDriver error starting Chrome: {e}")
-    sys.exit(1)
+    try:
+        arch = platform.machine().lower()
+        logging.info(f"Detected architecture: {arch}")
 
+        # ARM-based systems typically are not compatible with default WebDriverManager binaries
+        if 'arm' in arch or 'aarch64' in arch:
+            logging.warning("ARM architecture detected. Using manual chromedriver path.")
+            # Adjust this path based on where you manually installed chromedriver
+            chromedriver_path = "/usr/bin/chromedriver"
+        else:
+            chromedriver_path = ChromeDriverManager().install()
+
+        driver = webdriver.Chrome(service=Service(chromedriver_path), options=options)
+        logging.info("ChromeDriver started successfully.")
+        return driver
+
+    except Exception as e:
+        logging.error(f"Failed to start ChromeDriver: {e}")
+        sys.exit(1)
+
+driver = start_driver()
 driver.get(webpageURL)
 wait = WebDriverWait(driver, 15, poll_frequency=0.5)
 time.sleep(5)
