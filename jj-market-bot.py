@@ -23,11 +23,6 @@ webpageURL = 'https://j-j-market.com/products/matcha-wako-from-marukyu-koyamaen-
 load_dotenv()
 
 
-# Configure and start the logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
 def start_driver():
     options = Options()
     options.add_argument("--headless=new")
@@ -70,7 +65,7 @@ log_interval = 60
 last_log_time = time.time()
 
 
-print(f"JJ-Market Bot --> Script started at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
+print(f"Script started at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
 while True:
     now = time.time()
     if now - last_refresh >= refresh_interval:
@@ -270,6 +265,6 @@ while True:
         
 
     if now - last_log_time >= log_interval:
-        print(f"JJ-Market Bot --> Attribute still disabled at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
+        print(f"Attribute still disabled at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
         last_log_time = now
     time.sleep(poll_interval)

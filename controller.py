@@ -8,7 +8,8 @@ import os
 # —— CONFIGURE THESE TO MATCH YOUR SCRIPT NAMES ——
 SCRIPTS = [
     "astrid-tea-bot.py",
-    "jj-market-bot.py"
+    "jj-market-bot.py",
+    "ippodo-tea-bot.py"
 ]
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

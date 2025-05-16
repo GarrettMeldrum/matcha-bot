@@ -272,7 +272,7 @@ while True:
 
 
         # End the script whenever the purchase has been made
-        time.sleep(60)
+        time.sleep(10)
         driver.quit()
         sys.exit(0)
 

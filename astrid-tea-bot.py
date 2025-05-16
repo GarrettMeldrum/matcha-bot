@@ -24,10 +24,6 @@ website = 'https://astridtea.com/products/okita-matcha?variant=45366670033119'
 load_dotenv()
 
 
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 def start_driver():
     options = Options()
     options.add_argument("--headless=new")
