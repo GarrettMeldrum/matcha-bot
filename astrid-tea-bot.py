@@ -72,7 +72,7 @@ actions = ActionChains(driver)
 actions.move_to_element_with_offset(driver.find_element(By.TAG_NAME, "body"), 200, 150)
 actions.click()
 actions.perform()
-print(f"Astrid Tea Bot --> Script started at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
+print(f"Script started at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
 
 
 while True:
@@ -283,6 +283,6 @@ while True:
 
 
     if now - last_log_time >= log_interval:
-        print(f"Astrid Tea Bot --> Attribute still disabled at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
+        print(f"Attribute still disabled at {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}")
         last_log_time = now
     time.sleep(poll_interval)
