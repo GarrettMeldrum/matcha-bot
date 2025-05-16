@@ -13,19 +13,24 @@ SCRIPTS = [
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Global lock for ensuring prints go out without interlacing
+print_lock = threading.Lock()
+
 def _stream_output(pipe, label):
     """Read lines from pipe and print them prefixed."""
     for raw in iter(pipe.readline, ""):
         line = raw.rstrip()
         if line:
-            print(f"[{label}] {line}")
+            with print_lock:
+                print(f"[{label}] {line}")
 
 def launch_watchers():
     procs = []
     for script in SCRIPTS:
         script_path = os.path.join(BASE_DIR, script)
         if not os.path.isfile(script_path):
-            print(f"Cannot find script: {script_path}")
+            with print_lock:
+                print(f"Cannot find script: {script_path}")
             continue
 
         # -u = unbuffered so we see prints immediately
@@ -38,7 +43,8 @@ def launch_watchers():
             text=True,      # get str not bytes
             bufsize=1       # line-buffered
         )
-        print(f"Launched {script} (pid={p.pid})")
+        with print_lock:
+            print(f"Launched {script} (pid={p.pid})")
 
         # start a thread to forward its output
         t = threading.Thread(
@@ -47,11 +53,12 @@ def launch_watchers():
             daemon=True
         )
         t.start()
-
         procs.append(p)
 
+
     if not procs:
-        print("No slave scripts were launched. Exiting.")
+        with print_lock:
+            print("No slave scripts were launched. Exiting.")
         sys.exit(1)
 
     return procs
@@ -66,7 +73,8 @@ def shutdown(proc):
 
     if proc.poll() is None:
         proc.kill()
-        print(f"Killed pid={proc.pid}")
+        with print_lock:
+            print(f"Killed pid={proc.pid}")
 
 def main():
     procs = launch_watchers()
@@ -79,15 +87,18 @@ def main():
                     winner = p
                     break
             time.sleep(0.5)
-
-        print(f"\npid={winner.pid} exited first (code={winner.returncode}).")
-        print("Shutting down the others...")
+        
+        with print_lock:
+            print(f"pid={winner.pid} exited first (code={winner.returncode}).")
+            print("Shutting down the others...")
+        
         for p in procs:
             if p is not winner:
                 shutdown(p)
 
     except KeyboardInterrupt:
-        print("\nController interrupted; shutting down all watchers…")
+        with print_lock:
+            print("Controller interrupted; shutting down all watchers…")
         for p in procs:
             shutdown(p)
 
