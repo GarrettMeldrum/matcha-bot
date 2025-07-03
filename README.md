@@ -1,9 +1,6 @@
-This bot is to be utilized on a server and will:
+This bot works on the following websites
+-- JJ-Market
+-- AstridTea
+-- IppudoTea
 
-(1.) stay open monitoring for the ability to add the product to cart then checkout and purchase it.
-
-(2.) Only works on the JJ Market (but any of the matchas)
-
-(3.) Contains slight functionality to avoid paying shipping on the $79 dollar matcha
-
-(4.) Script will stop whenever it has checked out and the script sleeps for 60 seconds before shutdown
+Realistically, this is just a monitor for changes to the website and add to cart buttons to become available. Then it checks out and most websites utilize shop.coms checking out process, so it is standardized a little bit.
